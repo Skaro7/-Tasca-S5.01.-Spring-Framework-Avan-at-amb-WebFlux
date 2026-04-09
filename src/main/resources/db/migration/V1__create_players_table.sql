@@ -1,0 +1,11 @@
+-- V1__create_players_table.sql
+CREATE TABLE IF NOT EXISTS players (
+    id         BIGINT       NOT NULL AUTO_INCREMENT,
+    username   VARCHAR(100) NOT NULL UNIQUE,
+    wins       INT          NOT NULL DEFAULT 0,
+    losses     INT          NOT NULL DEFAULT 0,
+    win_rate   DOUBLE       NOT NULL DEFAULT 0.0,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
