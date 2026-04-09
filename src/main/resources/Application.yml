@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: blackjack
+
+  # ── MongoDB (reactive) ──────────────────────────────────────────────
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/blackjack_games
+      auto-index-creation: true
+
+  # ── MySQL via R2DBC (reactive) ──────────────────────────────────────
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/blackjack_players?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    pool:
+      initial-size: 5
+      max-size: 20
+
+  # ── Flyway (uses JDBC for migrations only) ──────────────────────────
+  flyway:
+    url: jdbc:mysql://localhost:3306/blackjack_players?useSSL=false&allowPublicKeyRetrieval=true
+    user: root
+    password: root
+    locations: classpath:db/migration
+    enabled: true
+
+# ── Springdoc / Swagger ─────────────────────────────────────────────
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+# ── Logging ─────────────────────────────────────────────────────────
+logging:
+  level:
+    cat.itacademy.blackjack: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    io.r2dbc: DEBUG
