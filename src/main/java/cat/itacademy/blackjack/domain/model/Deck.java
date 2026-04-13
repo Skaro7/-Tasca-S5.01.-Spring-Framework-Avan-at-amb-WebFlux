@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 public final class Deck {
 
     private final List<Card> cards;
@@ -20,8 +19,8 @@ public final class Deck {
         this.cards = Collections.unmodifiableList(deck);
     }
 
-    private Deck(List<Card> cards) {
-        this.cards = Collections.unmodifiableList(new ArrayList<>(cards));
+    public Deck(List<Card> orderedCards) {
+        this.cards = Collections.unmodifiableList(new ArrayList<>(orderedCards));
     }
 
     public DrawResult draw() {
@@ -29,6 +28,10 @@ public final class Deck {
         Card drawn = cards.get(0);
         Deck remaining = new Deck(cards.subList(1, cards.size()));
         return new DrawResult(drawn, remaining);
+    }
+
+    public List<Card> getCards() {
+        return cards;
     }
 
     public boolean isEmpty() { return cards.isEmpty(); }
