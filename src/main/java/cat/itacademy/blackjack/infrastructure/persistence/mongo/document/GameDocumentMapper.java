@@ -5,10 +5,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Manual mapper between Game (domain) and GameDocument (MongoDB).
- * Keeps the domain free of persistence annotations.
- */
 @Component
 public class GameDocumentMapper {
 
@@ -19,7 +15,9 @@ public class GameDocumentMapper {
         doc.setPlayerName(game.getPlayerName());
         doc.setPlayerHand(toHandDocument(game.getPlayerHand()));
         doc.setDealerHand(toHandDocument(game.getDealerHand()));
-        doc.setDeckCards(toDeckCards(game.getDeck()));
+        doc.setDeckCards(game.getDeck().getCards().stream()
+                .map(c -> new CardDocument(c.getRank(), c.getSuit()))
+                .toList());
         doc.setStatus(game.getStatus());
         doc.setCreatedAt(game.getCreatedAt());
         doc.setUpdatedAt(game.getUpdatedAt());
@@ -55,24 +53,9 @@ public class GameDocumentMapper {
         return hand;
     }
 
-    private List<CardDocument> toDeckCards(Deck deck) {
-        // We need access to the cards list — Deck exposes them via draw()
-        // so we serialise by drawing all cards into a list
-        List<CardDocument> result = new java.util.ArrayList<>();
-        Deck current = deck;
-        while (!current.isEmpty()) {
-            Deck.DrawResult dr = current.draw();
-            result.add(new CardDocument(dr.card().getRank(), dr.card().getSuit()));
-            current = dr.remainingDeck();
-        }
-        return result;
-    }
-
     private Deck toDeck(List<CardDocument> cards) {
-        // Reconstruct deck preserving order (no reshuffle)
         if (cards == null || cards.isEmpty()) return new Deck();
-        // Build via reflection-free approach: create ordered deck subclass
-        return DeckFactory.fromCards(cards.stream()
+        return new Deck(cards.stream()
                 .map(c -> new Card(c.getRank(), c.getSuit()))
                 .toList());
     }
