@@ -2,6 +2,9 @@ package cat.itacademy.blackjack.domain.model;
 
 import java.util.Objects;
 
+/**
+ * Value Object — immutable, equality by value.
+ */
 public final class Card {
 
     private final Rank rank;
