@@ -26,6 +26,25 @@ services:
       timeout: 5s
       retries: 5
 
+  app:
+    build: .
+    container_name: blackjack-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/blackjack_games
+      SPRING_R2DBC_URL: r2dbc:mysql://mysql:3306/blackjack_players?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_R2DBC_USERNAME: root
+      SPRING_R2DBC_PASSWORD: root
+      SPRING_FLYWAY_URL: jdbc:mysql://mysql:3306/blackjack_players?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_FLYWAY_USER: root
+      SPRING_FLYWAY_PASSWORD: root
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+
 volumes:
   mongo_data:
   mysql_data:
