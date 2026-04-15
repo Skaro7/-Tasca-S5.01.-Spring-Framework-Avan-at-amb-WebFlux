@@ -17,14 +17,11 @@ public class FlywayConfig {
     @Value("${spring.flyway.password}")
     private String password;
 
-    @Value("${spring.flyway.locations}")
-    private String locations;
-
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
         return Flyway.configure()
                 .dataSource(url, user, password)
-                .locations(locations)
+                .locations("classpath:db/migration")
                 .baselineOnMigrate(true)
                 .load();
     }
